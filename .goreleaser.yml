@@ -25,12 +25,15 @@ brews:
   - name: get
     ids: []
 
+    repository:
+      owner: "AIO-Develope"
+      name: "get"
+      
     install: |
       bin.install "get"
 
     test: |
       system "#{bin}/get --version"
-
     homepage: "https://aio-web.xyz"
 
     description: "A simple CLI tool to enhance productivity in git."
