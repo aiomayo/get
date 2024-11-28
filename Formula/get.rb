@@ -13,7 +13,7 @@ class Get < Formula
   on_macos do
     on_intel do
       url "https://github.com/AIO-Develope/get/releases/download/0.1.2/get_0.1.2_darwin_amd64"
-      sha256 "d2450bd0ab56ebaea7987ceeca2b8b6f288c9b8f7a1b003df1a97331a50c9d2d"
+      sha256 "55fc447521e95f41ed93e68d5476eb1352cbca58da690872ca0c0945e6963cdb"
 
       def install
         bin.install "get"
@@ -21,7 +21,7 @@ class Get < Formula
     end
     on_arm do
       url "https://github.com/AIO-Develope/get/releases/download/0.1.2/get_0.1.2_darwin_arm64"
-      sha256 "12d1803ad20b8afc723ce19de579503e78c02426647e502146b2165a5afa1993"
+      sha256 "4a83cc020ab26fbe2b89e942ad4d357aaac7fd7542a19ac3f2e91cca36bf3763"
 
       def install
         bin.install "get"
@@ -33,7 +33,7 @@ class Get < Formula
     on_intel do
       if Hardware::CPU.is_64_bit?
         url "https://github.com/AIO-Develope/get/releases/download/0.1.2/get_0.1.2_linux_amd64"
-        sha256 "3b21d99ccce9dafc49564423025ba17b4e02258439c1270b7624036fe8dee036"
+        sha256 "c8c66e15729115a05828ff30302095e9edb0e5fceb11791f56c77d7604f512bb"
 
         def install
           bin.install "get"
@@ -43,7 +43,7 @@ class Get < Formula
     on_arm do
       if Hardware::CPU.is_64_bit?
         url "https://github.com/AIO-Develope/get/releases/download/0.1.2/get_0.1.2_linux_arm64"
-        sha256 "c4f3092d49f01dd2c040dc55af67778cc91877611fdeca1d28eeec2076c891a5"
+        sha256 "5a56daabc8f5e0b915f0698c36a2c85666225e632e98e52f775e7618e36d17e3"
 
         def install
           bin.install "get"
