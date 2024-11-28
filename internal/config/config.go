@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/AIO-Develope/internal/repository"
+	"github.com/AIO-Develope/get/internal/repository"
 )
 
 type Config struct {

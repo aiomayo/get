@@ -1,4 +1,4 @@
-module github.com/AIO-Develope
+module github.com/AIO-Develope/get
 
 go 1.21
 
