@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
@@ -24,7 +25,7 @@ func main() {
 	}
 
 	rootCmd.PersistentFlags().Bool("ignore-config", false, "Do not use the preferred editor saved in the config")
-
+	rootCmd.AddCommand(uninstallCmd)
 	rootCmd.AddCommand(openCmd)
 
 	if err := rootCmd.Execute(); err != nil {
@@ -85,6 +86,44 @@ var openCmd = &cobra.Command{
 
 		if err := selectedRepo.Open(editorToUse); err != nil {
 			fmt.Println("Error opening repository:", err)
+			os.Exit(1)
+		}
+	},
+}
+var uninstallCmd = &cobra.Command{
+	Use:   "uninstall",
+	Short: "Uninstall the 'get' CLI",
+	Run: func(cmd *cobra.Command, args []string) {
+		executable, err := os.Executable()
+		if err != nil {
+			fmt.Println("Error getting the executable path:", err)
+			os.Exit(1)
+		}
+
+		var confirm bool
+		err = survey.AskOne(&survey.Confirm{
+			Message: "Are you sure you want to uninstall the 'get' CLI?",
+			Default: false,
+		}, &confirm)
+		if err != nil {
+			fmt.Println("Error confirming uninstall:", err)
+			os.Exit(1)
+		}
+
+		if !confirm {
+			fmt.Println("Uninstall canceled.")
+			return
+		}
+
+		switch runtime.GOOS {
+		case "linux", "darwin", "windows":
+			if err := os.Remove(executable); err != nil {
+				fmt.Println("Error uninstalling:", err)
+				os.Exit(1)
+			}
+			fmt.Println("Uninstalled successfully.")
+		default:
+			fmt.Println("Uninstall is not supported on this platform.")
 			os.Exit(1)
 		}
 	},
