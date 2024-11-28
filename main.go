@@ -8,16 +8,16 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 
-	"gitter/internal/config"
-	"gitter/internal/editor"
-	"gitter/internal/repository"
+	"get/internal/config"
+	"get/internal/editor"
+	"get/internal/repository"
 )
 
 var version = "dev"
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:     "gitter",
+		Use:     "get",
 		Short:   "Quickly open GitHub repositories",
 		Version: version,
 		Run:     runInteractive,
@@ -34,7 +34,7 @@ func main() {
 }
 
 var openCmd = &cobra.Command{
-	Use:   "gitter [repo-name]",
+	Use:   "get [repo-name]",
 	Short: "Open a specific repository",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
