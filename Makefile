@@ -4,7 +4,7 @@ VERSION := $(shell git describe --tags --always --dirty)
 LDFLAGS := -ldflags="-X 'main.version=$(VERSION)'"
 
 build:
-	go build $(LDFLAGS) -o bin/get ./cmd/get
+	go build $(LDFLAGS) -o get main.go
 
 
 clean:
@@ -15,4 +15,4 @@ lint:
 	golangci-lint run
 
 run:
-	go run ./cmd/get
+	go run main.go
