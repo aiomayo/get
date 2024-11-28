@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"gitter/internal/repository"
+	"get/internal/repository"
 )
 
 type Config struct {
@@ -16,9 +16,9 @@ type Config struct {
 
 func GetConfigPath() string {
 	homeDir, _ := os.UserHomeDir()
-	configDir := filepath.Join(homeDir, ".gitter")
+	configDir := filepath.Join(homeDir, ".get")
 	if err := os.MkdirAll(configDir, 0755); err != nil {
-		fmt.Printf("Error creating .gitter directory: %v\n", err)
+		fmt.Printf("Error creating .get directory: %v\n", err)
 	}
 	return filepath.Join(configDir, "config.json")
 }
