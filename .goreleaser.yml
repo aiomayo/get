@@ -22,21 +22,21 @@ checksum:
 
 
 brews:
-  - name: your-cli
-    description: "Quickly open GitHub repositories"
-    homepage: "https://github.com/AIO-Develope/get"
-    commit_author:
-      name: "GoReleaser Bot"
-      email: "bot@goreleaser.com"
-    github:
-      owner: AIO-Develope
-      name: get
-    folder: Formula
-    caveats: |
-      To use this tool, ensure you have the required permissions.
-    dependencies:
-      - git
+  - name: get
+    ids: []
+
     install: |
       bin.install "get"
+
     test: |
       system "#{bin}/get --version"
+
+    homepage: "https://aio-web.xyz"
+
+    description: "A simple CLI tool to enhance productivity in git."
+
+    license: "MIT"
+
+    skip_upload: false
+
+    url_template: "https://github.com/AIO-Develope/get/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
