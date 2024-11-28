@@ -20,3 +20,13 @@ archives:
 checksum:
   disable: true
 
+brews:
+  -
+    folder: Formula
+    repository:
+      owner: AIO-Develope
+      name: get
+      branch: master
+
+    homepage: https://github.com/AIO-Develope/get
+    description: A simple description of your application.
