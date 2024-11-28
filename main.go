@@ -1,20 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/Masterminds/semver"
+	"net/http"
 	"os"
+	"os/exec"
 	"runtime"
 	"strings"
-
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/spf13/cobra"
 
 	"github.com/AIO-Develope/get/internal/config"
 	"github.com/AIO-Develope/get/internal/editor"
 	"github.com/AIO-Develope/get/internal/repository"
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/spf13/cobra"
 )
 
 var version = "dev"
+var updateCheckURL = "https://api.github.com/repos/AIO-Develope/get/releases/latest"
 
 func main() {
 	rootCmd := &cobra.Command{
@@ -24,14 +28,63 @@ func main() {
 		Run:     runInteractive,
 	}
 
-	rootCmd.PersistentFlags().Bool("ignore-config", false, "Do not use the preferred editor saved in the config")
+	openCmd.Flags().BoolP("ignore-config", "i", false, "Ignore saved editor configuration and prompt for editor selection")
+	rootCmd.AddCommand(upgradeCmd)
 	rootCmd.AddCommand(uninstallCmd)
 	rootCmd.AddCommand(openCmd)
+	if err := checkForUpdates(); err != nil {
+		fmt.Println("Update check warning:", err)
+	}
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func checkForUpdates() error {
+	if version == "dev" {
+		return nil
+	}
+
+	resp, err := http.Get(updateCheckURL)
+	if err != nil {
+		return fmt.Errorf("failed to check for updates: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to fetch latest release: status code %d", resp.StatusCode)
+	}
+
+	var release struct {
+		TagName string `json:"tag_name"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
+		return fmt.Errorf("failed to parse release info: %v", err)
+	}
+
+	latestVersionStr := strings.TrimPrefix(release.TagName, "v")
+	currentVersionStr := version
+
+	latestVersion, err := semver.NewVersion(latestVersionStr)
+	if err != nil {
+		return fmt.Errorf("invalid latest version: %v", err)
+	}
+
+	currentVersion, err := semver.NewVersion(currentVersionStr)
+	if err != nil {
+		return fmt.Errorf("invalid current version: %v", err)
+	}
+
+	if latestVersion.GreaterThan(currentVersion) {
+		fmt.Printf("A new version is available: %s (current: %s)\n",
+			latestVersionStr, currentVersion)
+		fmt.Println("Run 'get upgrade' to update")
+	}
+
+	return nil
 }
 
 var openCmd = &cobra.Command{
@@ -175,10 +228,6 @@ func chooseEditor(cfg *config.Config, selectedRepo *repository.Repository) strin
 	return editorToUse
 }
 
-func init() {
-	openCmd.Flags().BoolP("ignore-config", "i", false, "Ignore saved editor configuration and prompt for editor selection")
-}
-
 func runInteractive(cmd *cobra.Command, args []string) {
 	repos, err := repository.FindRepositories()
 	if err != nil {
@@ -202,4 +251,32 @@ func runInteractive(cmd *cobra.Command, args []string) {
 	}
 
 	openCmd.Run(cmd, []string{selectedRepoName})
+}
+
+var upgradeCmd = &cobra.Command{
+	Use:   "upgrade",
+	Short: "Upgrade to the latest version of the 'get' CLI",
+	Run: func(cmd *cobra.Command, args []string) {
+		var err error
+		var command *exec.Cmd
+
+		switch runtime.GOOS {
+		case "linux", "darwin":
+			command = exec.Command("bash", "-c", "curl -fsSL https://get.aio-web.xyz/install.sh | bash")
+		case "windows":
+			command = exec.Command("powershell", "-Command", "iwr -useb https://get.aio-web.xyz/install.ps1 | iex")
+		default:
+			fmt.Printf("Upgrade not supported on %s\n", runtime.GOOS)
+			os.Exit(1)
+		}
+
+		command.Stdout = os.Stdout
+		command.Stderr = os.Stderr
+		command.Stdin = os.Stdin
+
+		if err = command.Run(); err != nil {
+			fmt.Printf("Upgrade failed: %v\n", err)
+			os.Exit(1)
+		}
+	},
 }
