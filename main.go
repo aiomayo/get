@@ -8,9 +8,9 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/spf13/cobra"
 
-	"github.com/AIO-Develope/internal/config"
-	"github.com/AIO-Develope/internal/editor"
-	"github.com/AIO-Develope/internal/repository"
+	"github.com/AIO-Develope/get/internal/config"
+	"github.com/AIO-Develope/get/internal/editor"
+	"github.com/AIO-Develope/get/internal/repository"
 )
 
 var version = "dev"
