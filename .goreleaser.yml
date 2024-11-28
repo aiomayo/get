@@ -19,3 +19,24 @@ archives:
 
 checksum:
   disable: true
+
+
+brews:
+  - name: your-cli
+    description: "Quickly open GitHub repositories"
+    homepage: "https://github.com/AIO-Develope/get"
+    commit_author:
+      name: "GoReleaser Bot"
+      email: "bot@goreleaser.com"
+    github:
+      owner: AIO-Develope
+      name: get
+    folder: Formula
+    caveats: |
+      To use this tool, ensure you have the required permissions.
+    dependencies:
+      - git
+    install: |
+      bin.install "get"
+    test: |
+      system "#{bin}/get --version"
