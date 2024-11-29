@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 
@@ -88,13 +89,14 @@ func checkForUpdates() error {
 }
 
 var openCmd = &cobra.Command{
-	Use:   "get [repo-name]",
-	Short: "Open a specific repository",
+	Use:   "get [repo-name-or-path]",
+	Short: "Open a specific repository by name or path",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		repoName := args[0]
-
+		repoInput := args[0]
 		ignoreConfig, _ := cmd.Flags().GetBool("ignore-config")
+
+		repoName := extractFolderName(repoInput)
 
 		cfg, err := config.Load()
 		if err != nil {
@@ -143,6 +145,11 @@ var openCmd = &cobra.Command{
 		}
 	},
 }
+
+func extractFolderName(path string) string {
+	return filepath.Base(filepath.Clean(path))
+}
+
 var uninstallCmd = &cobra.Command{
 	Use:   "uninstall",
 	Short: "Uninstall the 'get' CLI",
