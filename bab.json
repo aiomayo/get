@@ -2,7 +2,7 @@
   "name": "get",
   "author": "AIO",
   "description": "fast open github repos",
-  "version": "1.0.0",
+  "version": "0.1.7",
   "repository": "https://github.com/aiomayo/get",
   "license": "MIT",
   "platforms": {
@@ -10,10 +10,10 @@
       "binary": "",
     },
     "darwin": {
-      "binary": "get_0.1.6_darwin_amd64",
+      "binary": "get_0.1.7_darwin_amd64",
     },
     "windows": {
-      "binary": "get_0.1.6_windows_amd64.exe",
+      "binary": "get_0.1.7_windows_amd64.exe",
     }
   },
   "entry": "get",
